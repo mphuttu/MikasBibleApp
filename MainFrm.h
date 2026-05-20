@@ -37,7 +37,9 @@ protected:  // control bar embedded members
 
 // Generated message map functions
 protected:
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg int  OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg void OnHelpTopics();
+	afx_msg void OnUpdateHelpTopics(CCmdUI* pCmdUI);
 	DECLARE_MESSAGE_MAP()
 
 };

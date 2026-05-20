@@ -1,4 +1,4 @@
-
+﻿
 // MikasBibleApp.cpp : Defines the class behaviors for the application.
 //
 
@@ -131,14 +131,54 @@ BOOL CMikasBibleAppApp::InitInstance()
 	m_pMainWnd->ShowWindow(SW_SHOW);
 	m_pMainWnd->UpdateWindow();
 
-	// Add "Help Topics" to the Help menu (menu is fully loaded at this point).
+	// Modify menus now that the frame + menu are fully loaded.
 	CMenu* pMenu = m_pMainWnd->GetMenu();
 	if (pMenu)
 	{
+		// --- Remove unwanted File menu items (New, Open, Save, Save As) ---
+		static const UINT nFileRemove[] =
+		{
+			ID_FILE_NEW, ID_FILE_OPEN, ID_FILE_SAVE, ID_FILE_SAVE_AS
+		};
+		CMenu* pFile = pMenu->GetSubMenu(0);   // File is always the first submenu
+		if (pFile)
+		{
+			// Remove by command ID, iterating backwards so indices stay valid.
+			for (int i = pFile->GetMenuItemCount() - 1; i >= 0; --i)
+			{
+				UINT nID = pFile->GetMenuItemID(i);
+				for (UINT nRemove : nFileRemove)
+				{
+					if (nID == nRemove)
+					{
+						pFile->DeleteMenu(i, MF_BYPOSITION);
+						break;
+					}
+				}
+			}
+			// Remove any leading / trailing / consecutive separators left behind.
+			for (int pass = 0; pass < 2; ++pass)   // two passes: leading then trailing
+			{
+				int n = pFile->GetMenuItemCount();
+				for (int i = n - 1; i >= 0; --i)
+				{
+					UINT nID = pFile->GetMenuItemID(i);
+					bool bSep = (nID == (UINT)-1);
+					bool bFirst = (i == 0);
+					bool bLast  = (i == pFile->GetMenuItemCount() - 1);
+					bool bPrevSep = (!bFirst && pFile->GetMenuItemID(i - 1) == (UINT)-1);
+					if (bSep && (bFirst || bLast || bPrevSep))
+						pFile->DeleteMenu(i, MF_BYPOSITION);
+				}
+			}
+		}
+
+		// --- Add "Help Topics" to the Help menu ---
 		CMenu* pHelp = pMenu->GetSubMenu(pMenu->GetMenuItemCount() - 1);
 		if (pHelp)
 			pHelp->InsertMenu(0, MF_BYPOSITION | MF_STRING, ID_HELP_FINDER,
 			                  _T("&Help Topics\tF1"));
+
 		m_pMainWnd->DrawMenuBar();
 	}
 
@@ -188,7 +228,24 @@ BOOL CAboutDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	// Expand the dialog downward to fit the copyright notice.
+	// The dialog resource has an auto-generated "Copyright (C) ..." static from
+	// the VERSIONINFO block. Clear it - we show our own copyright text below.
+	for (CWnd* p = GetWindow(GW_CHILD); p; p = p->GetNextWindow())
+	{
+		TCHAR szCls[64] = {};
+		::GetClassName(p->GetSafeHwnd(), szCls, _countof(szCls));
+		if (_tcsicmp(szCls, _T("STATIC")) == 0)
+		{
+			CString s;
+			p->GetWindowText(s);
+			// Remove any static that contains "Copyright" but not the (c) symbol
+			// (our custom text uses the symbol so it won't be touched).
+			if (s.Find(_T("Copyright")) >= 0 && s.Find(_T("\u00A9")) < 0)
+				p->SetWindowText(_T(""));
+		}
+	}
+
+	// Expand the dialog downward to make room for the copyright notice.
 	CRect rcWin;
 	GetWindowRect(&rcWin);
 	SetWindowPos(nullptr, 0, 0, rcWin.Width(), rcWin.Height() + 48,
@@ -216,8 +273,4 @@ void CMikasBibleAppApp::OnAppAbout()
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
 }
-
-// CMikasBibleAppApp message handlers
-
-
 

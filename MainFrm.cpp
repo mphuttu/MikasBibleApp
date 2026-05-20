@@ -5,6 +5,8 @@
 #include "pch.h"
 #include "framework.h"
 #include "MikasBibleApp.h"
+#include <htmlhelp.h>
+#pragma comment(lib, "htmlhelp.lib")
 
 #include "MainFrm.h"
 #include "MikasBibleAppView.h"
@@ -20,6 +22,8 @@ IMPLEMENT_DYNCREATE(CMainFrame, CFrameWnd)
 
 BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_WM_CREATE()
+	ON_COMMAND(ID_HELP_FINDER,           &CMainFrame::OnHelpTopics)
+	ON_UPDATE_COMMAND_UI(ID_HELP_FINDER, &CMainFrame::OnUpdateHelpTopics)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -141,3 +145,22 @@ void CMainFrame::Dump(CDumpContext& dc) const
 
 // CMainFrame message handlers
 
+void CMainFrame::OnHelpTopics()
+{
+	// Build the full path to MikasBibleApp.chm next to the running executable.
+	TCHAR exePath[MAX_PATH];
+	GetModuleFileName(nullptr, exePath, MAX_PATH);
+	TCHAR* pSlash = _tcsrchr(exePath, _T('\\'));
+	if (pSlash) pSlash[1] = _T('\0');
+	CString chm = CString(exePath) + _T("MikasBibleApp.chm");
+
+	HWND hWnd = ::HtmlHelp(GetSafeHwnd(), chm, HH_DISPLAY_TOC, 0);
+	if (!hWnd)
+		AfxMessageBox(_T("Help file not found.\n\nPlease place MikasBibleApp.chm in the same folder as MikasBibleApp.exe."),
+		              MB_ICONINFORMATION);
+}
+
+void CMainFrame::OnUpdateHelpTopics(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(TRUE);
+}

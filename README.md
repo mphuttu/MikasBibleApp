@@ -130,3 +130,50 @@ Copyright © Mika Huttunen, 2026.
 Jesus is Lord!
 
 The *Bible in Basic English* (BBE) translation is in the public domain.
+
+---
+
+## Changelog
+
+### v1.0.1 — 2026-05-20
+
+#### Bug fixes
+- **Ctrl+C copy now works** — the reading pane forwards keyboard focus to the
+  `CRichEditCtrl` child; explicit `ID_EDIT_COPY` command handler added so
+  Edit > Copy and Ctrl+C are always active when text is selected.
+- **Correct book names in the contents tree** — six book abbreviations used in
+  `bbe.txt` were missing from the import mapping:
+
+  | Abbreviation | Correct name     |
+  |---|---|
+  | `Jug` | Judges |
+  | `Psm` | Psalms |
+  | `Mak` | Mark |
+  | `Phl` | Philippians |
+  | `1Ts` | 1 Thessalonians |
+  | `2Ts` | 2 Thessalonians |
+
+  `ImportBible.ps1` updated; live database corrected with SQL `UPDATE`.
+
+#### UI / menu clean-up
+- **File menu** — New, Open, Save and Save As removed (app is a read-only
+  viewer; no file operations are needed).
+- **Toolbar** — Save button removed in addition to the previously removed
+  New / Open / Cut / Paste buttons.
+
+#### Help system
+- **Help Topics menu item** — *Help > Help Topics* (and F1) now opens
+  `MikasBibleApp.chm` directly via the `HtmlHelp()` API.  
+  The item is always enabled; a friendly message box is shown if the CHM is
+  not found next to the executable.
+- **CHM compiled** — `help/MikasBibleApp.chm` built with HTML Help Workshop
+  4.74 from four HTML pages (Introduction, Overview, Navigating, Database Setup).
+  XML declarations removed from `toc.hhc` / `index.hhk` to eliminate compiler
+  warnings.
+
+#### About dialog
+- Duplicate auto-generated *"Copyright (C) 2026"* line (pulled from the
+  VERSIONINFO resource) is now hidden at runtime.
+- Custom *"Copyright © Mika Huttunen, 2026 / Jesus is Lord!"* text is
+  displayed at the bottom of the dialog.
+
