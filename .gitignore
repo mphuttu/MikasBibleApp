@@ -1,0 +1,39 @@
+# Visual Studio cache / build artefacts
+.vs/
+x64/
+Debug/
+Release/
+ipch/
+*.aps
+*.user
+*.ncb
+*.sdf
+*.suo
+*.opensdf
+*.db
+*.opendb
+*.VC.db
+*.VC.VC.opendb
+
+# Build outputs inside project subdirectory
+MikasBibleApp/x64/
+
+# Inno Setup output
+setup/Output/
+
+# Object files
+*.obj
+*.pch
+*.ilk
+*.pdb
+*.exp
+*.lib
+*.dll
+*.exe
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini

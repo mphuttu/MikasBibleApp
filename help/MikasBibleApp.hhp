@@ -1,0 +1,22 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=MikasBibleApp.chm
+Contents file=toc.hhc
+Index file=index.hhk
+Default topic=html\index.htm
+Default Window=Main
+Display compile progress=Yes
+Full-text search=Yes
+Language=0x409 English (United States)
+Title=Mika's Bible App Help
+
+[WINDOWS]
+Main="Mika's Bible App Help","toc.hhc","index.hhk","html\index.htm","html\index.htm",,,,,0x23520,,0x300e,,,,,,,,0
+
+[FILES]
+html\index.htm
+html\overview.htm
+html\navigation.htm
+html\setup.htm
+
+[INFOTYPES]

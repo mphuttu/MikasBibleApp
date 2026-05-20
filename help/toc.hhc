@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+</HEAD>
+<BODY>
+<OBJECT type="text/site properties">
+  <param name="Window Styles" value="0x800025">
+  <param name="ImageType" value="Folder">
+</OBJECT>
+<UL>
+  <LI><OBJECT type="text/sitemap">
+    <param name="Name" value="Introduction">
+    <param name="Local" value="html\index.htm">
+  </OBJECT>
+  <LI><OBJECT type="text/sitemap">
+    <param name="Name" value="Overview">
+    <param name="Local" value="html\overview.htm">
+  </OBJECT>
+  <LI><OBJECT type="text/sitemap">
+    <param name="Name" value="Navigating the Bible">
+    <param name="Local" value="html\navigation.htm">
+  </OBJECT>
+  <LI><OBJECT type="text/sitemap">
+    <param name="Name" value="Database Setup">
+    <param name="Local" value="html\setup.htm">
+  </OBJECT>
+</UL>
+</BODY>
+</HTML>

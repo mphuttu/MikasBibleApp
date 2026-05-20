@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Overview – Mika's Bible App</title>
+<style>
+  body { font-family: Georgia, serif; margin: 24px 32px; color: #222; }
+  h1   { color: #4a2c00; border-bottom: 1px solid #c8a05a; padding-bottom: 6px; }
+  h2   { color: #5a3400; margin-top: 24px; }
+  a    { color: #a05000; }
+  ul   { line-height: 1.7; }
+  table{ border-collapse: collapse; width: 100%; }
+  th,td{ border: 1px solid #c8a05a; padding: 6px 10px; text-align: left; }
+  th   { background: #fdf0d0; }
+</style>
+</head>
+<body>
+<h1>Application Overview</h1>
+
+<h2>User Interface</h2>
+<p>The main window is split into two panels:</p>
+<table>
+  <tr><th>Panel</th><th>Description</th></tr>
+  <tr><td><strong>Left – Contents</strong></td>
+      <td>A tree view listing all 66 Bible books. Each book can be expanded to
+          reveal its chapters. Book nodes show a book icon; chapter nodes show
+          a chapter icon.</td></tr>
+  <tr><td><strong>Right – Reading pane</strong></td>
+      <td>Displays the text of the selected chapter. The title bar shows the
+          name of the current book. Text is read-only but fully selectable and
+          copyable.</td></tr>
+</table>
+
+<h2>Features</h2>
+<ul>
+  <li><strong>Full Bible text</strong> – all 66 canonical books, 31 102 verses.</li>
+  <li><strong>Fast navigation</strong> – data is stored in SQL Server LocalDB for
+      instant chapter loading.</li>
+  <li><strong>Copy support</strong> – select any text and press Ctrl+C.</li>
+  <li><strong>Print support</strong> – File &gt; Print or Ctrl+P prints the current
+      chapter with proper pagination.</li>
+  <li><strong>Toolbar</strong> – quick access to Print, Copy and About.</li>
+</ul>
+
+<h2>System Requirements</h2>
+<ul>
+  <li>Windows 10 or later (64-bit)</li>
+  <li>Microsoft Visual C++ 2022 Redistributable (x64)</li>
+  <li>SQL Server Express LocalDB 2019 or later</li>
+</ul>
+
+<p><a href="index.htm">Back to Introduction</a></p>
+<hr>
+<p style="font-size:0.85em; color:#666;">Copyright &copy; Mika Huttunen, 2026. Jesus is Lord!</p>
+</body>
+</html>
