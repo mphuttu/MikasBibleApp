@@ -7,6 +7,12 @@ All 66 books of the Bible are available in the *Bible in Basic English* (BBE) tr
 
 ---
 
+## Screenshot
+
+![Mika's Bible App — Psalms Chapter 10](docs/images/2026-05-21-MikasBibleApp-Screenshot.png)
+
+---
+
 ## Features
 
 - Full Bible text – 66 books, 31 102 verses (Bible in Basic English)
