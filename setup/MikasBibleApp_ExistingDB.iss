@@ -1,4 +1,9 @@
-; Mika's Bible App - Inno Setup Script
+; Mika's Bible App - Inno Setup Script (Existing-DB variant)
+;
+; Use this script when BibleDB already exists in SQL Server LocalDB
+; (i.e. ImportBible.ps1 has already been run on the target machine).
+; Only the application executable and the help file are installed.
+;
 ; Requires Inno Setup 6.x  (https://jrsoftware.org/isinfo.php)
 ;
 ; Before compiling:
@@ -7,11 +12,8 @@
 ;   3.  Place the VC++ 2022 x64 redistributable next to this file:
 ;         setup\VC_redist.x64.exe
 ;         (download from https://aka.ms/vs/17/release/vc_redist.x64.exe)
-;   4.  Place the SQL Server LocalDB installer next to this file:
-;         setup\SqlLocalDB.msi
-;         (download from https://aka.ms/sqllocaldb)
 ;
-; Output: setup\Output\MikasBibleAppSetup.exe
+; Output: setup\Output\MikasBibleAppSetup_ExistingDB.exe
 
 #define AppName    "Mika's Bible App"
 #define AppVersion "1.0"
@@ -21,7 +23,7 @@
 #define SrcDir     "..\x64\Release"
 
 [Setup]
-AppId={{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}
+AppId={{B2C3D4E5-F6A7-8901-BCDE-F12345678901}
 AppName={#AppName}
 AppVersion={#AppVersion}
 AppPublisher={#AppPublisher}
@@ -34,7 +36,7 @@ DefaultGroupName={#AppName}
 AllowNoIcons=yes
 ; Output
 OutputDir=Output
-OutputBaseFilename=MikasBibleAppSetup
+OutputBaseFilename=MikasBibleAppSetup_ExistingDB
 Compression=lzma2
 SolidCompression=yes
 ; Architecture
@@ -44,7 +46,7 @@ ArchitecturesAllowed=x64
 WizardStyle=modern
 SetupIconFile=..\res\BibleBookIcon.ico
 UninstallDisplayIcon={app}\{#AppExeName}
-; Require admin so LocalDB can be configured
+; Admin rights needed for VC++ redistributable
 PrivilegesRequired=admin
 
 [Languages]
@@ -64,17 +66,8 @@ Source: "..\help\MikasBibleApp.chm"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\res\BibleBookIcon.ico";    DestDir: "{app}\res"; Flags: ignoreversion
 Source: "..\res\BibleChapterIcon.ico"; DestDir: "{app}\res"; Flags: ignoreversion
 
-; Bible data (needed only if user wants to reimport)
-Source: "..\data\bbe.txt"; DestDir: "{app}\data"; Flags: ignoreversion
-
-; PowerShell import script
-Source: "..\ImportBible.ps1"; DestDir: "{app}"; Flags: ignoreversion
-
 ; VC++ 2022 redistributable (place VC_redist.x64.exe in setup\ before compiling)
 Source: "VC_redist.x64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall; Check: FileExists(ExpandConstant('{src}\VC_redist.x64.exe'))
-
-; SQL Server LocalDB installer (place SqlLocalDB.msi in setup\ before compiling)
-Source: "SqlLocalDB.msi"; DestDir: "{tmp}"; Flags: deleteafterinstall; Check: FileExists(ExpandConstant('{src}\SqlLocalDB.msi'))
 
 [Icons]
 Name: "{group}\{#AppName}";           Filename: "{app}\{#AppExeName}"
@@ -87,19 +80,6 @@ Filename: "{tmp}\VC_redist.x64.exe"; Parameters: "/install /quiet /norestart"; \
     StatusMsg: "Installing Visual C++ Redistributable..."; \
     Check: FileExists(ExpandConstant('{tmp}\VC_redist.x64.exe')); \
     Flags: waituntilterminated
-
-; Install SQL Server LocalDB silently if the MSI was supplied
-Filename: "msiexec.exe"; Parameters: "/i ""{tmp}\SqlLocalDB.msi"" /quiet /norestart"; \
-    StatusMsg: "Installing SQL Server LocalDB..."; \
-    Check: FileExists(ExpandConstant('{tmp}\SqlLocalDB.msi')); \
-    Flags: waituntilterminated
-
-; Import the Bible database after installation
-Filename: "powershell.exe"; \
-    Parameters: "-ExecutionPolicy Bypass -File ""{app}\ImportBible.ps1"""; \
-    WorkingDir: "{app}"; \
-    StatusMsg: "Importing Bible data (this may take a minute)..."; \
-    Flags: waituntilterminated runhidden
 
 ; Launch app after install (optional)
 Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchProgram,{#AppName}}"; Flags: nowait postinstall skipifsilent

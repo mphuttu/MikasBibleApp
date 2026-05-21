@@ -88,7 +88,8 @@ MikasBibleApp/
 │   ├── BibleBookIcon.ico        # Tree view book icon
 │   └── BibleChapterIcon.ico     # Tree view chapter icon
 ├── setup/
-│   └── MikasBibleApp.iss        # Inno Setup installer script
+│   ├── MikasBibleApp.iss              # Inno Setup — full install (imports DB)
+│   └── MikasBibleApp_ExistingDB.iss   # Inno Setup — app only (DB already exists)
 ├── BibleDatabase.h / .cpp       # ODBC wrapper for LocalDB
 ├── ContentsView.h / .cpp        # Left-panel tree view
 ├── MainFrm.h / .cpp             # SDI main frame + splitter
@@ -114,13 +115,46 @@ MikasBibleApp/
 
 ## Building the Installer
 
-Requires [Inno Setup 6](https://jrsoftware.org/isinfo.php).
+Requires [Inno Setup 6](https://jrsoftware.org/isinfo.php).  
+Two installer scripts are provided in `setup\`:
+
+### Option A — Full installation (new machine, no database yet)
+
+Use `setup\MikasBibleApp.iss`.
+
+This installer:
+- Installs the application executable, help file, and tree-view icons
+- Installs the VC++ 2022 x64 Redistributable and SQL Server LocalDB (if not present)
+- Copies `ImportBible.ps1` and `data\bbe.txt` to the application folder
+- Runs `ImportBible.ps1` automatically to create the `BibleDB` LocalDB database
+
+Additional files needed in `setup\` before compiling:
+- `VC_redist.x64.exe` — [aka.ms/vs/17/release/vc_redist.x64.exe](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+- `SqlLocalDB.msi` — [aka.ms/sqllocaldb](https://aka.ms/sqllocaldb)
+
+Output: `setup\Output\MikasBibleAppSetup.exe`
+
+### Option B — Application-only installation (BibleDB already exists)
+
+Use `setup\MikasBibleApp_ExistingDB.iss`.
+
+This installer:
+- Installs the application executable, help file, and tree-view icons
+- Installs the VC++ 2022 x64 Redistributable (if not present)
+- Does **not** include the database import script or Bible data
+- Assumes `BibleDB` already exists in SQL Server LocalDB on the target machine
+
+Additional files needed in `setup\` before compiling:
+- `VC_redist.x64.exe` — [aka.ms/vs/17/release/vc_redist.x64.exe](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+
+Output: `setup\Output\MikasBibleAppSetup_ExistingDB.exe`
+
+### Steps (both variants)
 
 1. Build the project in **Release** configuration.
 2. Build the CHM help file (see above).
-3. Open `setup\MikasBibleApp.iss` in Inno Setup and click **Build > Compile**.
-
-The installer (`MikasBibleAppSetup.exe`) will be placed in `setup\Output\`.
+3. Place the required prerequisite installer(s) in `setup\` (see above).
+4. Open the desired `.iss` file in Inno Setup and click **Build > Compile**.
 
 ---
 
@@ -134,6 +168,24 @@ The *Bible in Basic English* (BBE) translation is in the public domain.
 ---
 
 ## Changelog
+
+### v1.0.2 — 2026-05-21
+
+#### Installer
+- **Second installer script** `setup\MikasBibleApp_ExistingDB.iss` added for machines
+  where `BibleDB` already exists in LocalDB — installs only the executable, help file,
+  and tree-view icons (no database import, no LocalDB/data files bundled).
+- **CHM included correctly** — removed a `Check: FileExists(...)` guard that was
+  evaluated on the target machine at runtime, causing the help file to be silently
+  skipped during installation.
+
+#### Bug fixes
+- **Tree-view icons in installed build** — `ContentsView.cpp` now first looks for
+  `res\` next to the executable (`{app}\res\`), then falls back to the
+  development-time path (`exe\..\..\res\`). Icons are visible in both the
+  installed application and Visual Studio debug/release runs.
+
+---
 
 ### v1.0.1 — 2026-05-20
 

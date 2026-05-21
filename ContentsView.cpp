@@ -18,13 +18,18 @@ void CContentsView::OnInitialUpdate()
 	CTreeCtrl& tree = GetTreeCtrl();
 	tree.DeleteAllItems();
 
-	// ── Build image list from res\ folder (next to project root) ─────────────
-	// Exe is in x64\Debug\ or x64\Release\; res\ is two levels up.
+	// ── Build image list from res\ folder ────────────────────────────────────
+	// Installed: exe is in {app}\, icons are in {app}\res\
+	// Development: exe is in x64\Debug\ or x64\Release\, res\ is two levels up.
 	TCHAR exePath[MAX_PATH] = {};
 	GetModuleFileName(nullptr, exePath, MAX_PATH);
 	TCHAR* pSlash = _tcsrchr(exePath, _T('\\'));
 	if (pSlash) *pSlash = _T('\0');
-	CString resDir = CString(exePath) + _T("\\..\\..\\res\\");
+	CString exeDir = CString(exePath);
+	CString resDir = exeDir + _T("\\res\\");
+	// Fall back to development layout if installed res\ doesn't exist
+	if (GetFileAttributes(resDir + _T("BibleBookIcon.ico")) == INVALID_FILE_ATTRIBUTES)
+		resDir = exeDir + _T("\\..\\..\\res\\");
 
 	bool iconsLoaded = false;
 	if (m_imageList.Create(16, 16, ILC_COLOR32 | ILC_MASK, 2, 0))
